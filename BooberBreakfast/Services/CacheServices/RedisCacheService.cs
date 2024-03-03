@@ -8,17 +8,19 @@ public class RedisCacheService : ICacheService
 {
     private IDatabase db;
 
-    public RedisCacheService()
+    public RedisCacheService(string serviceUrl)
     {
-        ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
+        ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(serviceUrl);
+        if (!redis.IsConnected) throw new Exception("redis not running");
         db = redis.GetDatabase();
+        if (db == null) throw new Exception("redis not connected");
     }
 
     public string GetValue(string key)
     {
-        string res = db.StringGet(key);
-        if (res == null) throw new Exception("key not found");
-        return res;
+        RedisValue res = db.StringGet(key);
+        if (!res.HasValue) throw new Exception("key not found");
+        return res.ToString();
     }
 
     public void SetValue(string key, string value)

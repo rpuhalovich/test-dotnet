@@ -50,8 +50,15 @@ public class TestController : ControllerBase
     [HttpGet("/test/cache/{name}")]
     public IActionResult GetKeyValue(string name)
     {
-        string val = cache.GetValue(name);
-        PostKeyValueResponse res = new PostKeyValueResponse(val);
-        return Ok(res);
+        string val;
+        try
+        {
+            val = cache.GetValue(name);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(new GetKeyValueNotFoundResponse(ex.Message));
+        }
+        return Ok(new GetKeyValueResponse(val));
     }
 }
