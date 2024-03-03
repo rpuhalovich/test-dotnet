@@ -17,6 +17,7 @@ public class TestController : ControllerBase
     [HttpGet("/test")]
     public IActionResult GetTest(TestRequest request)
     {
+		Console.WriteLine("hello there");
         return Ok(request);
     }
 
