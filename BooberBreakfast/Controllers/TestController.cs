@@ -2,6 +2,7 @@ using BooberBreakfast.Models;
 using BooberBreakfast.Services.CacheServices;
 using BooberBreakfast.Services.PersonServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace BooberBreakfast.Contracts.Breakfast;
 
@@ -18,8 +19,10 @@ public class TestController : ControllerBase
     }
 
     [HttpGet("/test")]
-    public IActionResult GetTest(TestRequest request)
+    public IActionResult GetTest(IOptions<TestSettings> options, TestRequest request)
     {
+        var res = options.Value.TestValue;
+        Console.WriteLine("value: ", res);
         return Ok(request);
     }
 
